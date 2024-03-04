@@ -15,3 +15,93 @@
  
  ## Code Example
  */
+import UIKit
+
+// MARK: - Address
+
+struct Address {
+    
+    // MARK: Properties
+    
+    var street: String
+    var city: String
+    var state: String
+    var zipCode: String
+    
+}
+
+// MARK: - AddressView
+
+final class AddressView: UIView {
+    
+    // MARK: Properties
+    
+    @IBOutlet var streetTextField: UITextField!
+    @IBOutlet var cityTextField: UITextField!
+    @IBOutlet var stateTextField: UITextField!
+    @IBOutlet var zipCodeTextField: UITextField!
+    
+}
+
+// MARK: - AddressViewController
+
+final class AddressViewController: UIViewController {
+    
+    // MARK: Properties
+    
+    var address: Address? {
+        didSet {
+            updateViewFromAddress()
+        }
+    }
+    
+    var addressView: AddressView! {
+        guard isViewLoaded else {
+            return nil
+        }
+        
+        return (view as! AddressView)
+    }
+    
+    // MARK: Lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        updateViewFromAddress()
+    }
+    
+    // MARK: Actions
+    
+    @IBAction func updateAddressFromView(_ sender: AnyObject) {
+        guard let street = addressView.streetTextField.text, street.count > 0,
+              let city = addressView.cityTextField.text, city.count > 0,
+              let state = addressView.stateTextField.text, state.count > 0,
+              let zipCode = addressView.stateTextField.text, zipCode.count > 0
+        else {
+            // TODO: Show an error message and handle the error.
+            return
+        }
+        
+        address = Address(
+            street: street,
+            city: city,
+            state: state,
+            zipCode: zipCode)
+    }
+    
+    // MARK: Private
+    
+    private func updateViewFromAddress() {
+        guard let addressView = addressView,
+              let address = address
+        else {
+            return
+        }
+        
+        addressView.streetTextField.text = address.street
+        addressView.cityTextField.text = address.city
+        addressView.stateTextField.text = address.state
+        addressView.zipCodeTextField.text = address.zipCode
+    }
+    
+}
